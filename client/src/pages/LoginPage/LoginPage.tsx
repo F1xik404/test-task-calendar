@@ -1,7 +1,7 @@
 import {NavLink, useNavigate} from "react-router";
 import {useForm} from "react-hook-form";
 import {loginUser} from "../../api/auth.api.ts";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {AuthResponce, LoginData} from "../../interfaces/auth.interfaces.ts";
 
 function LoginPage() {
@@ -9,11 +9,14 @@ function LoginPage() {
     const {register, formState: {errors}, handleSubmit} = useForm();
     const navigate = useNavigate();
 
+    const queryClient = useQueryClient();
+
     const loginMutation = useMutation({
         mutationFn: loginUser,
         onSuccess: (data: AuthResponce) => {
             console.log("success");
             localStorage.setItem("token", data.token);
+            queryClient.invalidateQueries({queryKey: ['events']});
             navigate("/dashboard");
         },
         onError: (error) => {

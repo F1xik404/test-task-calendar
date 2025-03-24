@@ -1,7 +1,7 @@
 import {NavLink, useNavigate} from "react-router";
 import {useForm} from "react-hook-form";
 import {AuthResponce, RegisterData} from "../../interfaces/auth.interfaces.ts";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {registerUser} from "../../api/auth.api.ts";
 //import {useState} from "react";
 
@@ -9,13 +9,14 @@ function RegisterPage(){
 
     const {register, formState: { errors }, handleSubmit} = useForm();
     const navigate = useNavigate();
-    //const [error, setErrors] = useState('');
+    const queryClient = useQueryClient();
 
     const registerMutation = useMutation({
         mutationFn: registerUser,
         onSuccess: (data: AuthResponce) => {
             console.log("success");
-            localStorage.setItem("token", data.token)
+            localStorage.setItem("token", data.token);
+            queryClient.invalidateQueries({queryKey: ['events']});
             navigate("/dashboard");
         },
         onError: (error) => {
