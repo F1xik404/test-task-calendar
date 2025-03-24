@@ -29,7 +29,7 @@ const Calendar = ({ handleEventDelete, filter }) => {
         currentDate.getMonth() + 1,
         0
     );
-    const startDay = startOfMonth.getDay();
+    const startDay = startOfMonth.getDay()-1 < 0 ? 6 : startOfMonth.getDay()-1;
     const daysInMonth = endOfMonth.getDate();
 
     const prevMonth = () => setCurrentDate(
@@ -111,7 +111,7 @@ const Calendar = ({ handleEventDelete, filter }) => {
                 </button>
             </div>
             <div className="grid grid-cols-7 gap-1 text-center font-semibold text-gray-600 text-sm">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
                     <div key={day} className="p-1">{day}</div>
                 ))}
             </div>
